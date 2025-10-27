@@ -28,12 +28,3 @@ body {
     rgb(var(--background-start-rgb));
   font-family: 'Inter', sans-serif;
 }
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}

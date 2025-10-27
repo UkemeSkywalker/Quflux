@@ -74,18 +74,23 @@ class CacheService:
     async def get(self, key: str) -> dict | None:
         """Get value from cache."""
         if not self.supabase:
+            print("⚠️  Cache service: Supabase client not available")
             return None
         try:
             result = self.supabase.table("cache_store").select("value").eq("key", key).execute()
             if result.data:
+                print(f"✅ Cache get successful for key: {key}")
                 return result.data[0]["value"]
+            print(f"⚠️  Cache get: No data found for key: {key}")
             return None
-        except Exception:
+        except Exception as e:
+            print(f"❌ Cache get failed for key {key}: {e}")
             return None
     
     async def set(self, key: str, value: dict, expires_at: str = None) -> bool:
         """Set value in cache."""
         if not self.supabase:
+            print("⚠️  Cache service: Supabase client not available")
             return False
         try:
             data = {
@@ -93,9 +98,11 @@ class CacheService:
                 "value": value,
                 "expires_at": expires_at
             }
-            self.supabase.table("cache_store").upsert(data).execute()
+            result = self.supabase.table("cache_store").upsert(data).execute()
+            print(f"✅ Cache set successful for key: {key}")
             return True
-        except Exception:
+        except Exception as e:
+            print(f"❌ Cache set failed for key {key}: {e}")
             return False
     
     async def delete(self, key: str) -> bool:
